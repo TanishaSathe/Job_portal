@@ -90,6 +90,7 @@ body {
   padding: 4px 10px;
   border-radius: 20px;
   font-size: 12px;
+  margin-right: 5px;
 }
 
 .apply-btn {
@@ -101,6 +102,7 @@ body {
   border-radius: 6px;
 }
 
+/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -151,9 +153,9 @@ body {
 <div class="main">
 
 <div class="sidebar">
-<h4>Filters</h4>
-<label><input type="checkbox" value="Remote" onchange="filterJobs()"> Remote</label><br><br>
-<label><input type="checkbox" value="Full-time" onchange="filterJobs()"> Full-time</label>
+<h4>🔎 Filters</h4>
+<label><input type="checkbox" value="Remote" onchange="filterJobs()"> 🌍 Remote</label><br><br>
+<label><input type="checkbox" value="Full-time" onchange="filterJobs()"> 🕒 Full-time</label>
 </div>
 
 <div class="jobs" id="jobList"></div>
@@ -165,7 +167,7 @@ body {
 <div class="modal" id="modal">
   <div class="modal-content">
     <span onclick="closeModal()" style="float:right;cursor:pointer;">❌</span>
-    <h3>Apply</h3>
+    <h3>📝 Apply</h3>
     <input type="text" id="username" placeholder="Your Name">
     <input type="file">
     <button onclick="submitApplication()">Submit</button>
@@ -177,7 +179,7 @@ body {
 <div class="modal" id="loginModal">
   <div class="modal-content">
     <span onclick="closeLogin()" style="float:right;cursor:pointer;">❌</span>
-    <h3>Login</h3>
+    <h3>🔐 Login</h3>
     <input type="text" id="loginUser" placeholder="Username">
     <input type="password" id="loginPass" placeholder="Password">
     <button onclick="login()">Login</button>
@@ -189,7 +191,7 @@ body {
 <div class="modal" id="registerModal">
   <div class="modal-content">
     <span onclick="closeRegister()" style="float:right;cursor:pointer;">❌</span>
-    <h3>Register</h3>
+    <h3>🆕 Register</h3>
     <input type="text" id="regUser" placeholder="Username">
     <input type="password" id="regPass" placeholder="Password">
     <button onclick="register()">Register</button>
@@ -198,9 +200,33 @@ body {
 
 <script>
 const jobs = [
-  {title:"Frontend Developer",company:"Infosys",location:"Pune",salary:"4-6 LPA",type:"Full-time",description:"Build UI using React",skills:"HTML, CSS, JS"},
-  {title:"Backend Developer",company:"TCS",location:"Mumbai",salary:"5-8 LPA",type:"Remote",description:"Work on APIs",skills:"Node.js"},
-  {title:"UI Designer",company:"Wipro",location:"Bangalore",salary:"3-5 LPA",type:"Full-time",description:"Design modern UI",skills:"Figma"}
+  {
+    title:"Frontend Developer",
+    company:"Infosys",
+    location:"Pune",
+    salary:"4-6 LPA",
+    type:"Full-time",
+    description:"Build UI using React",
+    skills:["HTML","CSS","JavaScript","React"]
+  },
+  {
+    title:"Backend Developer",
+    company:"TCS",
+    location:"Mumbai",
+    salary:"5-8 LPA",
+    type:"Remote",
+    description:"Work on APIs",
+    skills:["Node.js","Express","MongoDB","REST"]
+  },
+  {
+    title:"UI Designer",
+    company:"Wipro",
+    location:"Bangalore",
+    salary:"3-5 LPA",
+    type:"Full-time",
+    description:"Design modern UI",
+    skills:["Figma","Adobe XD","Wireframing","Prototyping"]
+  }
 ];
 
 let currentButton=null;
@@ -215,7 +241,7 @@ function displayJobs(list){
       <p>🏢 ${job.company}</p>
       <p>📍 ${job.location} | 💰 ${job.salary}</p>
       <span class="tag">${job.type}</span>
-      <p>🛠️ <b>Skills:</b> ${job.skills}</p>
+      <p>🛠️ <b>Skills:</b> ${job.skills.join(", ")}</p>
       <p>📄 ${job.description}</p>
       <button class="apply-btn" onclick="apply(event,this)">Apply</button>
     </div>`;
