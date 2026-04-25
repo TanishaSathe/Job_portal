@@ -7,97 +7,116 @@
 
 <style>
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: Arial, sans-serif;
   margin: 0;
-  background: #eef2f7;
+  background: #f5f7fa;
 }
 
-header {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  color: white;
-  padding: 20px;
-  text-align: center;
+/* Navbar */
+.navbar {
+  background: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
 }
 
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+  color: #ff6f00;
 }
 
-input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+/* Search Section */
+.search-bar {
+  background: white;
+  margin: 20px auto;
+  padding: 15px;
+  width: 80%;
+  display: flex;
+  gap: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 10px;
   border: 1px solid #ccc;
-  margin-bottom: 20px;
-  font-size: 14px;
+  border-radius: 6px;
+}
+
+.search-bar button {
+  background: #ff6f00;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Job Cards */
+.container {
+  width: 80%;
+  margin: auto;
 }
 
 .job {
   background: white;
-  padding: 20px;
-  margin-bottom: 15px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #eee;
   transition: 0.2s;
 }
 
 .job:hover {
-  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
 .job h3 {
-  margin: 0 0 5px;
+  margin: 0;
+  color: #333;
 }
 
-.job p {
-  margin: 0 0 10px;
+.company {
+  font-size: 14px;
+  color: #777;
+}
+
+.details {
+  font-size: 13px;
+  margin: 8px 0;
   color: #555;
 }
 
-button {
-  background: #4f46e5;
+.apply-btn {
+  background: #0a66c2;
   color: white;
   border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 6px 12px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #4338ca;
 }
 
 /* Modal */
 .modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
   display: none;
-  justify-content: center;
-  align-items: center;
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
 }
 
 .modal-content {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  width: 300px;
-}
-
-.modal-content h3 {
-  margin-top: 0;
-}
-
-.close {
-  float: right;
-  cursor: pointer;
-  font-weight: bold;
+  background:white;
+  padding:20px;
+  border-radius:8px;
+  width:300px;
 }
 </style>
 
@@ -105,26 +124,25 @@ button:hover {
 
 <body>
 
-<header>
-  <h1>💼 Job Portal</h1>
-  <p>Find your dream job</p>
-</header>
-
-<div class="container">
-
-  <input type="text" id="search" placeholder="Search by role or location..." onkeyup="filterJobs()">
-
-  <div id="jobList"></div>
-
+<div class="navbar">
+  <div class="logo">JobPortal</div>
+  <div>Login | Register</div>
 </div>
+
+<div class="search-bar">
+  <input type="text" id="searchTitle" placeholder="Search jobs...">
+  <input type="text" id="searchLocation" placeholder="Location">
+  <button onclick="filterJobs()">Search</button>
+</div>
+
+<div class="container" id="jobList"></div>
 
 <!-- Modal -->
 
 <div class="modal" id="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeModal()">×</span>
-    <h3>Apply for Job</h3>
-    <input type="text" placeholder="Your Name" id="name"><br><br>
+    <h3>Apply</h3>
+    <input type="text" placeholder="Your Name"><br><br>
     <input type="file"><br><br>
     <button onclick="submitApplication()">Submit</button>
   </div>
@@ -132,13 +150,27 @@ button:hover {
 
 <script>
 const jobs = [
-  { title: "Frontend Developer", location: "Pune" },
-  { title: "Backend Developer", location: "Mumbai" },
-  { title: "UI/UX Designer", location: "Bangalore" },
-  { title: "Data Analyst", location: "Delhi" }
+  {
+    title: "Frontend Developer",
+    company: "Infosys",
+    location: "Pune",
+    salary: "4-6 LPA"
+  },
+  {
+    title: "Backend Developer",
+    company: "TCS",
+    location: "Mumbai",
+    salary: "5-8 LPA"
+  },
+  {
+    title: "UI/UX Designer",
+    company: "Wipro",
+    location: "Bangalore",
+    salary: "3-5 LPA"
+  }
 ];
 
-let selectedButton = null;
+let selectedBtn = null;
 
 function displayJobs(list) {
   const jobList = document.getElementById("jobList");
@@ -148,39 +180,39 @@ function displayJobs(list) {
     jobList.innerHTML += `
       <div class="job">
         <h3>${job.title}</h3>
-        <p>📍 ${job.location}</p>
-        <button onclick="applyJob(this)">Apply</button>
+        <div class="company">${job.company}</div>
+        <div class="details">📍 ${job.location} | 💰 ${job.salary}</div>
+        <button class="apply-btn" onclick="applyJob(this)">Apply</button>
       </div>
     `;
   });
 }
 
 function filterJobs() {
-  const value = document.getElementById("search").value.toLowerCase();
+  const title = document.getElementById("searchTitle").value.toLowerCase();
+  const location = document.getElementById("searchLocation").value.toLowerCase();
+
   const filtered = jobs.filter(job =>
-    job.title.toLowerCase().includes(value) ||
-    job.location.toLowerCase().includes(value)
+    job.title.toLowerCase().includes(title) &&
+    job.location.toLowerCase().includes(location)
   );
+
   displayJobs(filtered);
 }
 
 function applyJob(btn) {
-  selectedButton = btn;
+  selectedBtn = btn;
   document.getElementById("modal").style.display = "flex";
 }
 
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-}
-
 function submitApplication() {
-  alert("Application submitted successfully!");
-  closeModal();
+  alert("Application submitted!");
+  document.getElementById("modal").style.display = "none";
 
-  if (selectedButton) {
-    selectedButton.innerText = "Applied ✅";
-    selectedButton.style.background = "green";
-    selectedButton.disabled = true;
+  if (selectedBtn) {
+    selectedBtn.innerText = "Applied";
+    selectedBtn.disabled = true;
+    selectedBtn.style.background = "gray";
   }
 }
 
