@@ -13,7 +13,6 @@ body {
   color: #e5e7eb;
 }
 
-/* Navbar */
 .navbar {
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(10px);
@@ -28,7 +27,6 @@ body {
   color: #60a5fa;
 }
 
-/* Search */
 .search-bar {
   margin: 20px auto;
   width: 85%;
@@ -55,7 +53,6 @@ body {
   border-radius: 8px;
 }
 
-/* Layout */
 .main {
   display: flex;
   gap: 20px;
@@ -63,7 +60,6 @@ body {
   margin: auto;
 }
 
-/* Sidebar */
 .sidebar {
   width: 25%;
   background: rgba(255,255,255,0.05);
@@ -71,7 +67,6 @@ body {
   border-radius: 12px;
 }
 
-/* Jobs */
 .jobs {
   width: 75%;
 }
@@ -90,15 +85,6 @@ body {
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
-.company {
-  color: #9ca3af;
-}
-
-.details {
-  font-size: 13px;
-  margin: 6px 0;
-}
-
 .tag {
   background: rgba(59,130,246,0.2);
   padding: 4px 10px;
@@ -106,12 +92,6 @@ body {
   font-size: 12px;
 }
 
-.desc {
-  font-size: 13px;
-  margin-top: 6px;
-}
-
-/* Button */
 .apply-btn {
   margin-top: 10px;
   background: linear-gradient(135deg,#3b82f6,#6366f1);
@@ -121,7 +101,6 @@ body {
   border-radius: 6px;
 }
 
-/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -232,12 +211,12 @@ function displayJobs(list){
   list.forEach(job=>{
     jobList.innerHTML+=`
     <div class="job">
-      <h3>${job.title}</h3>
-      <p>${job.company}</p>
-      <p>${job.location} | ${job.salary}</p>
+      <h3>💻 ${job.title}</h3>
+      <p>🏢 ${job.company}</p>
+      <p>📍 ${job.location} | 💰 ${job.salary}</p>
       <span class="tag">${job.type}</span>
-      <p><b>Skills:</b> ${job.skills}</p>
-      <p>${job.description}</p>
+      <p>🛠️ <b>Skills:</b> ${job.skills}</p>
+      <p>📄 ${job.description}</p>
       <button class="apply-btn" onclick="apply(event,this)">Apply</button>
     </div>`;
   });
