@@ -1,5 +1,4 @@
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -14,6 +13,7 @@ body {
   color: #1f2937;
 }
 
+/* Navbar */
 .navbar {
   background: white;
   padding: 15px 40px;
@@ -28,6 +28,7 @@ body {
   color: #4f46e5;
 }
 
+/* Search */
 .search-bar {
   margin: 20px auto;
   width: 85%;
@@ -36,22 +37,25 @@ body {
   background: white;
   padding: 12px;
   border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
 
 .search-bar input {
   flex: 1;
   padding: 10px;
   border: none;
+  outline: none;
 }
 
 .search-bar button {
-  background: #4f46e5;
+  background: linear-gradient(135deg,#4f46e5,#7c3aed);
   color: white;
   border: none;
-  padding: 10px;
-  border-radius: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
 }
 
+/* Layout */
 .main {
   display: flex;
   gap: 20px;
@@ -59,13 +63,15 @@ body {
   margin: auto;
 }
 
+/* Sidebar */
 .sidebar {
   width: 25%;
   background: white;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
+/* Jobs */
 .jobs {
   width: 75%;
 }
@@ -74,8 +80,23 @@ body {
   background: white;
   padding: 18px;
   margin-bottom: 15px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid #eee;
+  transition: 0.2s;
+}
+
+.job:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.company {
+  color: #6b7280;
+}
+
+.details {
+  font-size: 13px;
+  margin: 6px 0;
 }
 
 .tag {
@@ -85,6 +106,13 @@ body {
   font-size: 12px;
 }
 
+/* Description */
+.desc {
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+/* Button */
 .apply-btn {
   margin-top: 10px;
   background: #4f46e5;
@@ -95,6 +123,7 @@ body {
   cursor: pointer;
 }
 
+/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -111,13 +140,15 @@ body {
   background:white;
   padding:20px;
   border-radius:10px;
-  width:300px;
+  width:320px;
 }
 </style>
 
 </head>
 
 <body>
+
+<!-- Navbar -->
 
 <div class="navbar">
   <div class="logo">JobPortal</div>
@@ -127,6 +158,8 @@ body {
   </div>
 </div>
 
+<!-- Search -->
+
 <div class="search-bar">
   <input type="text" id="title" placeholder="Search jobs">
   <input type="text" id="location" placeholder="Location">
@@ -134,13 +167,19 @@ body {
 </div>
 
 <div class="main">
+
+  <!-- Sidebar -->
+
   <div class="sidebar">
     <h4>Filters</h4>
     <label><input type="checkbox" value="Remote" onchange="filterJobs()"> Remote</label><br><br>
     <label><input type="checkbox" value="Full-time" onchange="filterJobs()"> Full-time</label>
   </div>
 
+  <!-- Jobs -->
+
   <div class="jobs" id="jobList"></div>
+
 </div>
 
 <!-- Apply Modal -->
@@ -148,7 +187,7 @@ body {
 <div class="modal" id="modal">
   <div class="modal-content">
     <span onclick="closeModal()" style="float:right; cursor:pointer;">❌</span>
-    <h3>Apply</h3>
+    <h3>Apply for Job</h3>
     <input type="text" id="username" placeholder="Your Name"><br><br>
     <input type="file"><br><br>
     <button onclick="submitApplication()">Submit</button>
@@ -187,8 +226,9 @@ const jobs = [
     location:"Pune",
     salary:"4-6 LPA",
     type:"Full-time",
-    description:"Build UI using React",
-    skills:"HTML, CSS, JS"
+    experience:"1-3 years",
+    description:"Build responsive UI using React.",
+    skills:"HTML, CSS, JavaScript"
   },
   {
     title:"Backend Developer",
@@ -196,8 +236,9 @@ const jobs = [
     location:"Mumbai",
     salary:"5-8 LPA",
     type:"Remote",
-    description:"Work on APIs",
-    skills:"Node.js"
+    experience:"2-5 years",
+    description:"Develop APIs and backend logic.",
+    skills:"Node.js, Express"
   }
 ];
 
@@ -210,11 +251,12 @@ function displayJobs(list){
     jobList.innerHTML+=`
     <div class="job">
       <h3>${job.title}</h3>
-      <p>${job.company}</p>
-      <p>${job.location} | ${job.salary}</p>
+      <div class="company">${job.company}</div>
+      <div class="details">📍 ${job.location} | 💰 ${job.salary}</div>
+      <div class="details">🧑‍💻 ${job.experience}</div>
       <span class="tag">${job.type}</span>
-      <p><b>Skills:</b> ${job.skills}</p>
-      <p>${job.description}</p>
+      <div class="desc"><b>Skills:</b> ${job.skills}</div>
+      <div class="desc">${job.description}</div>
       <button class="apply-btn" onclick="apply(event,this)">Apply</button>
     </div>`;
   });
@@ -223,20 +265,26 @@ function displayJobs(list){
 function filterJobs(){
   const t=document.getElementById("title").value.toLowerCase();
   const l=document.getElementById("location").value.toLowerCase();
+  const selected=Array.from(document.querySelectorAll('.sidebar input:checked')).map(cb=>cb.value);
+
   const filtered=jobs.filter(j=>
     j.title.toLowerCase().includes(t) &&
-    j.location.toLowerCase().includes(l)
+    j.location.toLowerCase().includes(l) &&
+    (selected.length===0 || selected.includes(j.type))
   );
+
   displayJobs(filtered);
 }
 
 function apply(e,btn){
   e.stopPropagation();
+
   if(!localStorage.getItem("user")){
     alert("Please login first");
     openLogin();
     return;
   }
+
   currentButton=btn;
   document.getElementById("modal").style.display="flex";
 }
@@ -245,7 +293,9 @@ function submitApplication(){
   const name=document.getElementById("username").value;
   if(name===""){ alert("Enter name"); return;}
   closeModal();
+
   currentButton.innerText="Applied ✓";
+  currentButton.style.background="green";
   currentButton.disabled=true;
 }
 
@@ -254,10 +304,10 @@ function closeModal(){
 }
 
 /* Auth */
-function openLogin(){ document.getElementById("loginModal").style.display="flex";}
-function closeLogin(){ document.getElementById("loginModal").style.display="none";}
-function openRegister(){ document.getElementById("registerModal").style.display="flex";}
-function closeRegister(){ document.getElementById("registerModal").style.display="none";}
+function openLogin(){document.getElementById("loginModal").style.display="flex";}
+function closeLogin(){document.getElementById("loginModal").style.display="none";}
+function openRegister(){document.getElementById("registerModal").style.display="flex";}
+function closeRegister(){document.getElementById("registerModal").style.display="none";}
 
 function register(){
   localStorage.setItem("user",document.getElementById("regUser").value);
@@ -273,17 +323,21 @@ function login(){
   ){
     showUser(localStorage.getItem("user"));
     closeLogin();
-  } else alert("Invalid");
+  } else alert("Invalid credentials");
 }
 
 function showUser(u){
   document.getElementById("authSection").innerHTML=
-  `Welcome ${u} | <span onclick="logout()">Logout</span>`;
+  `Welcome ${u} | <span onclick="logout()" style="cursor:pointer">Logout</span>`;
 }
 
-function logout(){ location.reload(); }
+function logout(){
+  localStorage.removeItem("user");
+  localStorage.removeItem("pass");
+  location.reload();
+}
 
-/* close outside */
+/* Close outside */
 window.onclick=function(e){
   if(e.target.classList.contains("modal")){
     e.target.style.display="none";
